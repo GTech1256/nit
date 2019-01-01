@@ -1,0 +1,352 @@
+const Busboy = require('busboy');
+const { Base64  } = require('js-base64');
+const account = require('express').Router();
+const Blowfish = require('egoroof-blowfish');
+
+const config = require('../../config/appconfig').default;
+const UserUtils = require('../../utils/models/userutils').default;
+const User = require('../../utils/models/user').default;
+const Planet = require('../../utils/models/planet').default;
+const uploadFileToS3 = require('../../misc/AWS');
+const mailer = require('../../misc/mailer/index');
+const transaction = require('../../utils/nem/transaction');
+const { getHiddenUserEmail } = require('../../utils/js/email');
+const apiCodes = require('../../misc/apiCodes/index');
+const roleProtect = require('../../misc/roleProtector');
+const avatarSettings = require('../../utils/settings/avatarSettings.json');
+const AWN_S3_Settings = require('../../utils/settings/AWS_S3_Settings.json');
+const JoiMiddleware = require('../../dataValidate/joiValidatorMiddleware');
+
+// initialize bf
+const bf = new Blowfish(config.nem.privateSalt, Blowfish.MODE.CBC, Blowfish.PADDING.NULL);
+
+account.get("/test", roleProtect(['admin']), async (req, res, next) => {
+  try {
+    const userAfterUpdate = await UserUtils.updateExpByUserEmailAndAct(req.user.email, "BUY_PLANET");
+    res.sendStatus(200);
+  } catch(err) {
+    next(err)
+  }
+})
+
+account.post('/withdraw',
+JoiMiddleware('private_account_withdraw', 'body'),
+(req, res, next) => {
+
+  bf.setIv(req.user.wallet.iv);
+  const privateKey = bf.decode(new Uint8Array(req.user.wallet.privateKey.buffer), Blowfish.TYPE.STRING);
+
+  const tx = transaction.createXEMTransferTransaction(config.bootstrapConfig, config.nem, req.body.address, req.body.amount, null, null);
+  transaction.signAndAnnounceTransaction(config.bootstrapConfig, privateKey, tx, () => {
+    apiCodes[0](res, 'withdraw initialized')
+
+  }, (err) => {
+    if (err.message === 'FAILURE_INSUFFICIENT_BALANCE') {
+      apiCodes[12](res);
+    } else {
+      next(err);
+    }
+  });
+});
+
+account.get('/referals', async(req, res, next) => {
+  try {
+    const userAddress = req.user.wallet.address;
+
+    // поиск рефералов пользователя
+    const referals = await User.find({ $or: [
+        {ref1: userAddress},
+        {ref2: userAddress},
+      ],
+      active: true
+    });
+
+    // нормализация данных о каждом реферале для фронта
+    const dataOfReferals = referals.map(referal => {
+      const level = referal.roles.includes('partner') ? 2 : 1; // если есть роль partner, то реферал 2 уровня
+      // если пользователь у реферала в ref2, то он партнер и получает `2%` от реферала
+      const percentByLevel = referal.ref1 === userAddress ? config.referals.level[1] : config.referals.level[2];
+      // начало подсчета вознаграждения
+      let sumOfProfit = 0;
+
+      if (referal.txHistory.length === 1) {
+        sumOfProfit = referal.txHistory[0].amount * percentByLevel;
+      }
+
+      if (referal.txHistory.length > 1) {
+        // суммирование каждой транзакции реферала с последующим умножением на профент
+        sumOfProfit = referal.txHistory.reduce((a, b) => a.amount + b.amount) * percentByLevel;
+      }
+      // конец подсчета вознаграждения
+
+      return {
+        username: referal.username,
+        address: referal.wallet.address,
+        sumOfProfit,
+        invitationDate: referal.createdAt,
+        level
+      }
+    });
+
+    // нормализация данных о каждой транзакции реферала для фронта
+    // массив транзакций
+    const dataOfProfit = [];
+
+    // итерация каждой транзакции каждого реферала
+    referals.forEach((referal) => {
+      referal.txHistory.forEach((operation) => {
+        const level = referal.roles.includes('partner') ? 2 : 1; // если есть роль partner, то реферал 2 уровня
+        // если пользователь у реферала в ref2, то он партнер и получает `2%` от реферала
+        const percentByLevel = referal.ref1 === userAddress ? config.referals.level[1] : config.referals.level[2]
+        // возвращение полученных данных в массив транзакций
+        dataOfProfit.push({
+          address: referal.wallet.address,
+          profit: operation.amount * percentByLevel,
+          date: operation.date,
+          level
+        })
+      })
+    })
+
+    // отправка данных на фронт
+    res.send({dataOfReferals, dataOfProfit});
+  } catch (e) {
+    // при любых ошибках возвращение запроса с ошибкой
+    next(e);
+  }
+})
+
+/**
+ * @params username (string)
+ * @return error message or transactions + message
+ */
+
+account.get('/transactions',
+JoiMiddleware('private_account_transactions', 'query'),
+async (req, res, next) => {
+  try {
+    const { username } = req.resultOfJoiValidate.value;
+
+    const user = await User.findOne({
+      active: true,
+      wallet: {
+        $exists: true
+      },
+      username
+    });
+
+    if (!user) {
+      return apiCodes[10](res, 'user has not verified the email')
+    }
+
+    return res.send({ message: 'transactions', transactions: user.txHistory });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+account.get('/info',
+async (req, res, next) => {
+  try {
+    const userPlanets = await Planet.find({
+      owner: req.user.wallet.address
+    }, {
+      'status.sale.cost': true,
+      'description.seed': true // change seed to population
+    })
+
+    const selectedInformationOfUser = await User.findOne({
+      email: req.user.email
+    }, {
+      experience: true
+    })
+
+    // TODO: FIX
+    /*const sumOfPopulations = userPlanetsPopulation.length === 0 ? 0 : userPlanetsPopulation.reduce((a, b) => a.description.seed + b.description.seed); // change seed to population
+    const sumOfCost = userPlanetsPopulation.length === 0 ? 0 : userPlanetsPopulation.reduce((a, b) => a.status.sale.cost + b.status.sale.cost); // change seed to population
+    */
+
+    let sumOfPopulations = 0, sumOfCosts = 0;
+    for (planet of userPlanets) {
+      const planetsPopulation = 1; // TODO
+      const planetsCost = planet.status.sale.cost; // TODO
+      console.log("userPlanetsPopulation", planet);
+      sumOfPopulations += planetsPopulation;
+      sumOfCosts += planetsCost;
+    }
+
+    return res.send({
+      email: getHiddenUserEmail(req.user.email),
+      sumOfPopulations,
+      sumOfCosts,
+      ...selectedInformationOfUser.toObject()
+    });
+  } catch(err) {
+    next(err);
+  }
+
+})
+
+account.get('/info/:address',
+JoiMiddleware('private_account_info_address', 'params'),
+async (req, res, next) => {
+  try {
+
+    const selectedInformationOfUser = await User.findOne({
+      'wallet.address': req.resultOfJoiValidate.value.address
+    }, {
+      personalInformation: true,
+      username: true
+    });
+    if (!selectedInformationOfUser) {
+      return apiCodes.USER_NOT_FOUND(res);
+    }
+    return res.send({
+      username: selectedInformationOfUser.username,
+      ...selectedInformationOfUser.personalInformation
+    });
+
+  } catch(err) {
+    next(err);
+  }
+
+})
+
+account.post('/change/birthday',
+JoiMiddleware('private_account_change_birthday', 'body'),
+ async (req, res, next) => {
+  const { newValue } = req.resultOfJoiValidate.value;
+
+  await User.findOneAndUpdate({ email: req.user.email }, { 'personalInformation.birthday': newValue })
+
+  apiCodes[0](res, 'birthday seted');
+})
+
+account.post('/change/about-me',
+JoiMiddleware('private_account_change_aboutMe', 'body'),
+ async (req, res, next) => {
+  const { newValue } = req.resultOfJoiValidate.value;
+
+  await User.findOneAndUpdate({ email: req.user.email }, { 'personalInformation.aboutUser': newValue })
+
+  apiCodes[0](res, 'information about yourself seted');
+})
+
+account.post('/change/my-site',
+JoiMiddleware('private_account_change_mySite', 'body'),
+ async (req, res, next) => {
+  const { newValue } = req.resultOfJoiValidate.value;
+
+  await User.findOneAndUpdate({ email: req.user.email }, { 'personalInformation.website': newValue })
+
+  apiCodes[0](res, 'information about your site changed');
+});
+
+account.post('/change/picture',
+async (req, res, next) => {
+  try {
+    const busboy = new Busboy({ headers: req.headers });
+
+    busboy.on('finish', async () => {
+      const file = req.files.picture;
+
+
+      if (file.mimetype !== 'image/jpeg') {
+        apiCodes[20](res);
+      };
+
+      if (file.size > avatarSettings.fileSizeLimitByte) {
+        apiCodes[21](res);
+      };
+
+      const fileSize = 'default';
+
+      // SPA VUE allow only image/jpeg
+      file.name = `${req.user.wallet.address}${fileSize}.jpeg`;
+
+      const BucketName = `${config.bucketName}/${AWN_S3_Settings.nameFolderOfAvatars}`;
+
+      await uploadFileToS3(file, BucketName);
+      apiCodes.ALL_GOOD(res);
+    });
+
+    req.pipe(busboy);
+  } catch(err) {
+    apiCodes[22](res);
+    console.error(err);
+    // next(err);
+  }
+})
+
+account.post('/change/',
+(req, res, next) => {
+  const validationSchema = req.body.type === 'email' ? 'private_account_changeEMAIL' : 'private_account_changePASSWORD';
+  JoiMiddleware(validationSchema, 'body')(req, res, next);
+},
+async (req, res, next) => {
+  try {
+    const { type, value } = req.body;
+    // oldValue in type 'email' is hidden by default from Vue SPA
+    const { oldValue, newValue, repeatValue } = req.resultOfJoiValidate.value;
+
+    let user = await User.findOne({ email: req.user.email });
+
+
+
+    //////
+
+    if (type === 'password') {
+      const pwdIsValid = await UserUtils.comparePasswords(oldValue, user.password);
+      if (!pwdIsValid) {
+        return apiCodes.OLD_PASS_NOT_CORRECT(res);
+      }
+    } else {
+      const userWithNewEmail = await User.findOne({ email: newValue });
+
+      if (userWithNewEmail) {
+        return apiCodes[3](res);
+      }
+
+    };
+
+    const payload = {
+      type: 'change',
+      key: type,
+      value: newValue,
+    };
+
+    const verificationToken = Base64.encode(JSON.stringify(payload));
+
+    user = await User
+      .findOneAndUpdate({
+        email: req.user.email,
+        active: true,
+        wallet: {
+          $exists: true
+        }
+      }, {
+        verificationToken
+      })
+
+    if (!user) {
+      return apiCodes[7](res);
+    }
+
+    const ejsData = {
+      username: req.user.username,
+      type: payload.type,
+      propertie: payload.propertie,
+      confirmLink: `${config.appProtocol}://${config.appAdress}/info?token=${verificationToken}`// `${config.appProtocol}://${config.appAdress}/api/public/signup/verify?token=${verificationToken}`
+    };
+
+    await mailer(req.cookies.locale, 'restore', ejsData, req.user.email)//  config.mail.user, , `${type} changing`, html);
+
+    return apiCodes[0](res, 'confirmation link sent to Email');
+
+  } catch(err) {
+    next(err);
+  }
+});
+
+module.exports = account;
