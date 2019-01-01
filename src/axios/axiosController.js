@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 /**
  * @description axiosController Проверяет JWT и обновляет access token и refresh token при протухании access token.
  * Так же добавляет заголовки к запросам и устанавливает baseURL(домен и тип протокола(http))
@@ -14,7 +15,7 @@ axios.defaults.withCredentials = true; // enable cookies
 
 // const apiVersion = "v1";
 export const apiRequest = axios.create({
-  baseURL: `http://${window.location.hostname}/api/`,
+  baseURL: `${document.location.origin}/api/`,
   headers: {
     Accept: 'application/json',
     Authorization: `Bearer ${localStorage.getItem('user-token')}`,
