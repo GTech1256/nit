@@ -39,6 +39,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var whitelistOfOriginsCors = ['http://nit.ru', 'https://nit.ru', 'http://localhost:3030', 'http://localhost:3031'];
 
+if (process.env.WEBLINK_FOR_CORS) {
+  whitelistOfOriginsCors.push(process.env.WEBLINK_FOR_CORS);
+}
+
 function checkOriginAgainstWhitelist(ctx) {
   var requestOrigin = ctx.accept.headers.origin;
 

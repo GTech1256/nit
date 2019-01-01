@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.f9f9812dadd862ac2798bd7e9484adae.js"
+  "/precache-manifest.1c330e47291fcc7f9b9e7efa7d1f7e59.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "nit-website"});
