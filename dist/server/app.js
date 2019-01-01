@@ -133,6 +133,5 @@ if (process.env.NODE_ENV === 'development') {
 app.use(_routes.default);
 app.use((0, _koa2HistoryApiFallback.default)());
 app.use((0, _koaStatic.default)(_path.default.resolve('dist/front')));
-console.log('end');
 var _default = app;
 exports.default = _default;

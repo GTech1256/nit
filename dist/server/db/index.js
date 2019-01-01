@@ -17,6 +17,7 @@ function getUrlForMongooseConnection() {
   var _process = process,
       env = _process.env;
   var authString = process.env.NODE_ENV === 'production' ? "".concat(env["".concat(prefixOfENV, "_DB_USERNAME")], ":").concat(env["".concat(prefixOfENV, "_DB_PASSWORD")], "@") : '';
+  console.log('url for connect:', "mongodb://".concat(Boolean(authString)).concat(env["".concat(prefixOfENV, "_DB_HOSTNAME")], ":").concat(env["".concat(prefixOfENV, "_DB_PORT")], "/").concat(env["".concat(prefixOfENV, "_DB_NAME")]));
   return "mongodb://".concat(authString).concat(env["".concat(prefixOfENV, "_DB_HOSTNAME")], ":").concat(env["".concat(prefixOfENV, "_DB_PORT")], "/").concat(env["".concat(prefixOfENV, "_DB_NAME")]);
 }
 
