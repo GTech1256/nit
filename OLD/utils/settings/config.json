@@ -1,0 +1,23 @@
+{
+  "level": "info",
+  "dailyRotateFile": {
+    "filename": "http-%DATE%.log",
+    "datePattern": "YYYY-MM-DD",
+    "maxSize": "100m",
+    "maxFiles": 100,
+    "zippedArchive": true
+  },
+  "pathToLogs": "logsData/server",
+  "disabledRoutesForLoggingHTTP": [
+  ],
+  "hideBodyValues": [
+    "pass"
+  ],
+  "lengthLimit": {
+    "body": 0,
+    "query": 0,
+    "params": 0,
+    "cookies": 0,
+    "headers": 15
+  }
+}

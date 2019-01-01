@@ -1,0 +1,112 @@
+# Typescript
+models/*.js
+models/base/*.js
+nem/*.js
+mongo/*.js
+logger/*.js
+config/*.js
+helper/*.js
+tools/*.js
+!tools/cleanAliases.js
+
+# Temporary Files
+temporaryFiles/
+
+# Node build artifacts
+node_modules/
+
+# May be symlink
+node_modules
+
+# Logs
+*.log
+log.txt
+
+# Local development
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Env
+.env
+
+# packages
+package-lock.json
+*.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock\.json
+yarn\.lock
+
+# Static
+public/video
+public/images
+public/static/images
+public/static/img
+public/static/textures
+public/spa
+public/spa/static
+
+# Git GUI
+.project
+
+# Vagrant
+.vagrant
+.vagrant/
+vagrant/.vagrant
+vagrant/.vagrant/
+*.vdi
+*.vmdk
+vagrant/config.rb
+
+# Ansible
+*.retry
+
+#Temp
+*.tmp 
+*.tmp.*
+/temp
+/tmp
+*.nfs*
+
+# Other
+*.map
+*~
+*.ap_
+*.apk
+bin/
+bower_components/
+.buildpath
+*.class
+composer.json
+composer.lock
+coverage/
+*.dex
+.DS_Store
+gen/
+.gradle/
+local.properties
+platforms/
+platforms/android/ant-build/
+platforms/android/CordovaLib/ant-build
+plugins/
+proguard/
+$RECYCLE.BIN/
+.sass-cache/
+.settings/
+Thumbs.db
+UserInterfaceState.xcuserstate
+vendor/
+.versions/
+.nyc_output/
+
+# packages
+
+package-lock.json
+yarn.lock

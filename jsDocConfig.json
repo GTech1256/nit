@@ -1,0 +1,36 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": [
+      ""
+    ],
+    "exclude": [
+      ".git",
+      ".meteor",
+      "node_modules"
+    ],
+    "excludePattern": ".*config.*|(node_modules|docs|nemspace-docs|frontend-spa|public|ratingOfUsers|__tests__|__mocks__|utils|temporaryFiles|coverage)"
+  },
+  "plugins": ["plugins/markdown"],
+  "opts": {
+    "encoding": "utf8",
+    "template": "templates/default",
+    "destination": "./nemspace-docs/_jsDoc/",
+    "recurse": true,
+    "verbose": true
+  },
+  "markdown": {
+    "parser": "gfm",
+    "hardwrap": true
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "default": {
+      "outputSourceFiles": true,
+      "includeDate": true
+    }
+  }
+}

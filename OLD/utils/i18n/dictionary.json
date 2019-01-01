@@ -1,0 +1,16 @@
+{
+  "ru": {
+
+    "password": "пароля",
+    "email": "почты",
+    "restore": "восстановление",
+    "change": "смену"
+
+  },
+  "en": {
+    "password": "password",
+    "email": "email",
+    "restore": "restore",
+    "change": "change"
+  }
+}

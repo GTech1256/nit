@@ -1,0 +1,234 @@
+[
+  {
+    "title": "ALL_GOOD",
+    "codeStatus": 200,
+    "text": {
+      "en": "All good.",
+      "ru": "Все хорошо."
+    }
+  },
+  {
+    "title": "SERVER_ERROR",
+    "codeStatus": 500,
+    "text": {
+      "en": "Error on the server. We'll fix it soon enough.",
+      "ru": "Ошибка на сервере. Скоро мы ее устраним."
+    }
+  },
+  {
+    "title": "BAD_EMAIL_OR_PASSWORD",
+    "codeStatus": 403,
+    "text": {
+      "en": "Email or password entered incorrectly.",
+      "ru": "Почта или пароль введен неверно."
+    }
+  },
+  {
+    "title": "EMAIL_BUSY",
+    "codeStatus": 400,
+    "text": {
+      "en": "This mail is already busy.",
+      "ru": "Данная почта уже занята."
+    }
+  },
+  {
+    "title": "USERNAME_NOT_UNIQUE",
+    "codeStatus": 400,
+    "text": {
+      "en": "Username must be unique.",
+      "ru": "Данное имя пользователя уже занято."
+    }
+  },
+  {
+    "title": "DATA_NOT_VALID",
+    "codeStatus": 400,
+    "text": {
+      "en": "The entered data did not pass validation.",
+      "ru": "Введенные даннные не прошли валидацию."
+    }
+  },
+  {
+    "title": "INVALID_ACCOUNT_CONFIRM_TOKEN",
+    "codeStatus": 403,
+    "text": {
+      "en": "The token for confirming account changes has not been received.",
+      "ru": "Токен для подтверждения изменений аккаунта не получен."
+    }
+  },
+  {
+    "title": "USER_NOT_FOUND",
+    "codeStatus": 404,
+    "text": {
+      "en": "Could not find user in database.",
+      "ru": "Не удалось найти пользователя в базе данных."
+    }
+  },
+  {
+    "title": "LINK_EXPIRED",
+    "codeStatus": 404,
+    "text": {
+      "en": "The link is out of date.",
+      "ru": "Ссылка устарела."
+    }
+  },
+  {
+    "title": "GALAXY_NOT_FOUND",
+    "codeStatus": 404,
+    "text": {
+      "en": "The requested galaxy was not found.",
+      "ru": "Запрошенная галактика не найдена."
+    }
+  },
+  {
+    "title": "USER_NOT_ACTIVE",
+    "codeStatus": 403,
+    "text": {
+      "en": "User did not verify Email.",
+      "ru": "Пользователь не подтвердил почту."
+    }
+  },
+  {
+    "title": "CAPTCHA_NOT_VALID",
+    "codeStatus": 400,
+    "text": {
+      "en": "reCAPTCHA failed validation.",
+      "ru": "reCAPTCHA не прошла проверку."
+    }
+  },
+  {
+    "title": "INSUFFICIENT_BALANCE",
+    "codeStatus": 400,
+    "text": {
+      "en": "Insufficient balance.",
+      "ru": "Недостаточный баланс."
+    }
+  },
+  {
+    "title": "OLD_PASS_NOT_CORRECT",
+    "codeStatus": 400,
+    "text": {
+      "en": "Old password is not correct.",
+      "ru": "Cтарый пароль не верен."
+    }
+  },
+  {
+    "title": "PLANET_NOT_FOUND",
+    "codeStatus": 400,
+    "text": {
+      "en": "The requested planet not found.",
+      "ru": "Запрошенная планета не найдена."
+    }
+  },
+  {
+    "title": "CANT_SELF_BUY",
+    "codeStatus": 403,
+    "text": {
+      "en": "You already own this item.",
+      "ru": "Вы уже владеете данным объектом."
+    }
+  },
+  {
+    "title": "ITEM_NOT_BELONG_USER",
+    "codeStatus": 403,
+    "text": {
+      "en": "The requested item does not belong to the user.",
+      "ru": "Запрошенный товар не принадлежит пользователю."
+    }
+  },
+  {
+    "title": "ITEM_CHANGED_DURING_CLAIM",
+    "codeStatus": 403,
+    "text": {
+      "en": "Item changed by somebody. Try again later.",
+      "ru": "Товар был кем-то изменен. Попробуйте позже."
+    }
+  },
+  {
+    "title": "CONTRACT_GUID_COLLISION",
+    "codeStatus": 403,
+    "text": {
+      "en": "Item this same smart contract id already exists. Try again later.",
+      "ru": "Товар с тем же id смарт-контракта уже существует. Попробуйте позже."
+    }
+  },
+  {
+    "title": "CANT_STORE_CONTRACT",
+    "codeStatus": 403,
+    "text": {
+      "en": "Can`t save smart contract. Try again later.",
+      "ru": "Не удается сохранить смарт-контракт. Попробуйте позже."
+    }
+  },
+  {
+    "title": "ITEM_IS_LOCKED",
+    "codeStatus": 403,
+    "text": {
+      "en": "Item locked. Try again later.",
+      "ru": "В данный момент производятся операции над товаром. Попробуйте позже."
+    }
+  },
+  {
+    "title": "PLANET_SOLD_OR_NOT_BELONG_USER",
+    "codeStatus": 403,
+    "text": {
+      "en": "Planet is currently being sold or is not belong to user. Try again later.",
+      "ru": "Планета в настоящее время продается или не принадлежит пользователю. Попробуйте позже."
+    }
+  },
+  {
+    "title": "NOT_IN_STOCK",
+    "codeStatus": 403,
+    "text": {
+      "en": "Product is not in stock",
+      "ru": "Товара нет в наличии"
+    }
+  },
+  {
+    "title": "CANT_BROADCAST_TO_BLOCKCHAIN",
+    "codeStatus": 403,
+    "text": {
+      "en": "Can`t broadcast transaction to blockchain",
+      "ru": "Не удается записать транзакцию в блокчейн сети"
+    }
+  },
+  {
+    "title": "OWNER_CHANGED_AD",
+    "codeStatus": 403,
+    "text": {
+      "en": "The owner changed the ad.",
+      "ru": "Владелец изменил объявление."
+    }
+  },
+  {
+    "title": "NO_ACCESS",
+    "codeStatus": 403,
+    "text": {
+      "en": "User does not have access.",
+      "ru": "У пользователя нет доступа."
+    }
+  },
+  {
+    "title": "ALLOW_JPEG",
+    "codeStatus": 415,
+    "text": {
+      "en": "We allow only jpeg.",
+      "ru": "Мы принимаем картинки только jpeg расширения."
+    }
+  },
+  {
+    "title": "TO_BIG_FILE",
+    "codeStatus": 415,
+    "text": {
+      "en": "File is too big to load.",
+      "ru": "Файл слишком большой для загрузки."
+    }
+  },
+  {
+    "title": "UPLOAD_PICTURE_ERROR",
+    "codeStatus": 500,
+    "text": {
+      "en": "Try other picture.",
+      "ru": "Попробуйте другую картинку."
+    }
+  }
+]

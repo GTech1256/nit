@@ -1,0 +1,2 @@
+{"message":"please set the environmental variable DB_TYPE","level":"\u001b[31merror\u001b[39m","timestamp":"2018-12-09T11:44:51.091Z","macAddress":"CANT_DETECT_MACADDR"}
+{"message":"locale not exist, setted `en` registration","level":"\u001b[31merror\u001b[39m","timestamp":"2018-12-09T16:29:16.761Z","macAddress":"CANT_DETECT_MACADDR"}

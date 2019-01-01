@@ -1,0 +1,19 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 100
+    },
+    "auditLog": "C:\\Users\\GTech\\Desktop\\web\\1nem\\frontend-server-nemapp\\logsData\\server\\daily\\.5d9071ea23e13f916ce304d3ce0a22c7ce47ec89-audit.json",
+    "files": [
+        {
+            "date": 1543917134373,
+            "name": "C:\\Users\\GTech\\Desktop\\web\\1nem\\frontend-server-nemapp\\logsData\\server\\daily\\http-2018-12-04.log",
+            "hash": "561b1147bd21a1595a94f231f370cb7a"
+        },
+        {
+            "date": 1544221205082,
+            "name": "C:\\Users\\GTech\\Desktop\\web\\1nem\\frontend-server-nemapp\\logsData\\server\\daily\\http-2018-12-08.log",
+            "hash": "69155fc00324a3af401c3d758f17541c"
+        }
+    ]
+}
