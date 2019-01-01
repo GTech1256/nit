@@ -21,6 +21,10 @@ const whitelistOfOriginsCors = [
   'http://localhost:3031',
 ];
 
+if (process.env.WEBLINK_FOR_CORS) {
+  whitelistOfOriginsCors.push(process.env.WEBLINK_FOR_CORS);
+}
+
 function checkOriginAgainstWhitelist(ctx) {
   const requestOrigin = ctx.accept.headers.origin;
 
