@@ -12,6 +12,7 @@
 		"build": "cross-env NODE_ENV=production npm run build:front && npm run build:server",
 		"serve": "cross-env NODE_ENV=production npm run build && npm run ss",
 		"start": "npm run build && node ./dist/server/index.js",
+		"start:dist": "node ./dist/server/index.js",
 		"sf": "npm run serve:front",
 		"ss": "npm run serve:server",
 		"bf": "npm run build:front",
