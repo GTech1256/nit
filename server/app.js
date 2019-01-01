@@ -17,8 +17,8 @@ import routes from './routes';
 const whitelistOfOriginsCors = [
   'http://nit.ru',
   'https://nit.ru',
+  'http://localhost',
   'http://localhost:3030',
-  'http://localhost:3031',
 ];
 
 if (process.env.WEBLINK_FOR_CORS) {
@@ -88,5 +88,5 @@ app.use(routes);
 
 app.use(historyApiFallback());
 app.use(serve(path.resolve('dist/front')));
-console.log('end');
+
 export default app;

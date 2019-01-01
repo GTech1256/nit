@@ -98,9 +98,12 @@ export default router
       token,
       refreshToken,
     };
+    return next;
   })
   .post('/signup', async (ctx) => {
+    console.log(1);
     const resultOfUnique = await isUniqueParamsForUser(ctx.request.body.email);
+    console.log(2);
 
     if (!resultOfUnique.unique) {
       return ctx.throw(418, {
@@ -117,5 +120,6 @@ export default router
     ctx.body = {
       success: true,
     };
+    console.log('out');
     return ctx.throw(200);
   });

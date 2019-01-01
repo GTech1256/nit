@@ -216,8 +216,9 @@ function () {
               token: token,
               refreshToken: refreshToken
             };
+            return _context3.abrupt("return", next);
 
-          case 17:
+          case 18:
           case "end":
             return _context3.stop();
         }
@@ -239,14 +240,16 @@ function () {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            _context4.next = 2;
+            console.log(1);
+            _context4.next = 3;
             return isUniqueParamsForUser(ctx.request.body.email);
 
-          case 2:
+          case 3:
             resultOfUnique = _context4.sent;
+            console.log(2);
 
             if (resultOfUnique.unique) {
-              _context4.next = 5;
+              _context4.next = 7;
               break;
             }
 
@@ -254,27 +257,28 @@ function () {
               message: 'User with this email already exist'
             }));
 
-          case 5:
-            _context4.next = 7;
+          case 7:
+            _context4.next = 9;
             return _User.default.hashPassword(ctx.request.body.password);
 
-          case 7:
+          case 9:
             ctx.request.body.password = _context4.sent;
-            _context4.next = 10;
+            _context4.next = 12;
             return new _User.default(ctx.request.body);
 
-          case 10:
+          case 12:
             user = _context4.sent;
-            _context4.next = 13;
+            _context4.next = 15;
             return user.save();
 
-          case 13:
+          case 15:
             ctx.body = {
               success: true
             };
+            console.log('out');
             return _context4.abrupt("return", ctx.throw(200));
 
-          case 15:
+          case 18:
           case "end":
             return _context4.stop();
         }

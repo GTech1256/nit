@@ -13,9 +13,8 @@ axios.defaults.withCredentials = true; // enable cookies
 /* options for apiRequest */
 
 // const apiVersion = "v1";
-const port = process.env.NODE_ENV === 'production' ? '' : ':3030';
 export const apiRequest = axios.create({
-  baseURL: `http://${window.location.hostname}${port}/api/`,
+  baseURL: `http://${window.location.hostname}/api/`,
   headers: {
     Accept: 'application/json',
     Authorization: `Bearer ${localStorage.getItem('user-token')}`,

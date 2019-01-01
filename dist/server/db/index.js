@@ -16,7 +16,6 @@ function getUrlForMongooseConnection() {
   var prefixOfENV = process.env.NODE_ENV.toUpperCase();
   var _process = process,
       env = _process.env;
-  console.log(process.env.DEVELOPMENT_DB_HOSTNAME);
   var authString = process.env.NODE_ENV === 'production' ? "".concat(env["".concat(prefixOfENV, "_DB_USERNAME")], ":").concat(env["".concat(prefixOfENV, "_DB_PASSWORD")], "@") : '';
   return "mongodb://".concat(authString).concat(env["".concat(prefixOfENV, "_DB_HOSTNAME")], ":").concat(env["".concat(prefixOfENV, "_DB_PORT")], "/").concat(env["".concat(prefixOfENV, "_DB_NAME")]);
 }
