@@ -1,4 +1,4 @@
-import '../config';
+import './config';
 import '@babel/polyfill';
 import server from './app';
 
