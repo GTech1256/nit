@@ -25,18 +25,16 @@ function getUrlForMongooseConnection() {
   }/${env[`${prefixOfENV}_DB_NAME`]}`;
 }
 
-setTimeout(() => {
-  mongoose
-    .connect(
-      getUrlForMongooseConnection(),
-      { useNewUrlParser: true },
-    )
-    .then(
-      () => {
-        console.log('Database connected');
-      },
-      () => {
-        console.error('Connect to database broken');
-      },
-    );
-}, 1000);
+mongoose
+  .connect(
+    getUrlForMongooseConnection(),
+    { useNewUrlParser: true },
+  )
+  .then(
+    () => {
+      console.log('Database connected');
+    },
+    () => {
+      console.error('Connect to database broken');
+    },
+  );

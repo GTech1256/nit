@@ -1,8 +1,8 @@
-const request = require('supertest')
-const authorizedApp = require('authorized_app');
+import request from 'supertest';
+// import authorizedApp from 'authorized_app';
 
 describe('Test of api-private/account.js', () => {
-
+  /*
   it('shoult return error due of bad user roles for /test', () => {
     return authorizedApp
       .get('/api/private/account/test')
@@ -46,5 +46,5 @@ describe('Test of api-private/account.js', () => {
         expect(response.body).toHaveProperty('dataOfProfit');
       });
   });
-
-})
+*/
+});

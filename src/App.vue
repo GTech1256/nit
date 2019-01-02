@@ -7,7 +7,14 @@
 <script>
 import Header from './components/Header';
 
+import types from './store/modules/user/TYPES';
+
 export default {
+	created() {
+		if (localStorage.getItem('user-token')) {
+			this.$store.dispatch(types.LOAD_USER_DATA);
+		}
+	},
 	components: {
 		Header,
 	},

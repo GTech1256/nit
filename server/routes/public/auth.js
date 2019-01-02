@@ -28,56 +28,49 @@ async function isUniqueParamsForUser(email) {
 }
 
 export default router
-  .post('/register', (ctx) => {
-    ctx.body = JSON.stringify(ctx.request.body);
+  .post('/refresh', async (ctx, next) => {
+    const { refreshToken } = ctx.state.joiValidValues;
+
+    const user = await User.findOne({
+      refreshToken,
+    });
+
+    if (!user) {
+      return ctx.throw(404, { message: 'user not exist' });
+    }
+
+    const newRefreshToken = getRefreshToken(user);
+
+    const userTokens = user.refreshToken.filter(token => token !== refreshToken);
+    userTokens.push(newRefreshToken);
+
+    await user.update({
+      $set: {
+        refreshToken: userTokens,
+      },
+    });
+
+    const token = jwtSign(user);
     ctx.status = 200;
+
+    ctx.body = {
+      apiCode: 0,
+      token,
+      refreshToken: newRefreshToken,
+    };
+    return next;
   })
-  .post('/login', async (ctx, next) => {
-    // login logic
-  })
-  .post(
-    '/refresh',
-    /* JoiMiddleware('public_auth_refresh', 'body'), */ async (ctx, next) => {
-      const { refreshToken } = ctx.request.body;
-
-      const user = await User.findOne({
-        refreshToken,
-      });
-
-      if (!user) {
-        return ctx.status(403);
-      }
-
-      const newRefreshToken = getRefreshToken(user);
-
-      const userTokens = user.refreshToken.filter(token => token !== refreshToken);
-      userTokens.push(newRefreshToken);
-
-      await user.update({
-        $set: {
-          refreshToken: userTokens,
-        },
-      });
-
-      jwtSign(user, (err, token) => {
-        if (err) throw err;
-        ctx.body = {
-          apiCode: 0,
-          token,
-          refreshToken: newRefreshToken,
-        };
-      });
-    },
-  )
   .post('/signin', async (ctx, next) => {
-    const { email, password } = ctx.request.body;
+    const { email, password } = ctx.state.joiValidValues;
 
     const user = await User.findOne({
       email,
     });
 
     if (user === null) {
-      return ctx.throw(400);
+      return ctx.throw(400, {
+        message: 'user not exist',
+      });
     }
 
     const pwdIsValid = await User.checkPassword(password, user.password);
@@ -101,9 +94,7 @@ export default router
     return next;
   })
   .post('/signup', async (ctx) => {
-    console.log(1);
-    const resultOfUnique = await isUniqueParamsForUser(ctx.request.body.email);
-    console.log(2);
+    const resultOfUnique = await isUniqueParamsForUser(ctx.state.joiValidValues.email);
 
     if (!resultOfUnique.unique) {
       return ctx.throw(418, {
@@ -111,15 +102,15 @@ export default router
       });
     }
 
-    ctx.request.body.password = await User.hashPassword(ctx.request.body.password);
+    ctx.state.joiValidValues.password = await User.hashPassword(ctx.state.joiValidValues.password);
 
-    const user = await new User(ctx.request.body);
+    const user = await new User(ctx.state.joiValidValues);
 
     await user.save();
 
     ctx.body = {
       success: true,
     };
-    console.log('out');
+
     return ctx.throw(200);
   });

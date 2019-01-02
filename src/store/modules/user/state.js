@@ -1,4 +1,3 @@
 export default {
-	status: '',
-	profile: {},
+  profile: {},
 };

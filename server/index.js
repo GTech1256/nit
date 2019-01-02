@@ -1,11 +1,13 @@
+import '../config';
 import '@babel/polyfill';
-import dotenv from 'dotenv';
 import server from './app';
 
-dotenv.config();
+try {
+  const { PORT } = process.env;
 
-const { PORT } = process.env;
-
-server.listen(PORT, () => {
-  console.log(`Koa is listening in ${PORT}`);
-});
+  server.listen(PORT, () => {
+    console.log(`Koa is listening in ${PORT}`);
+  });
+} catch (e) {
+  console.log(e);
+}

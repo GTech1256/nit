@@ -1,12 +1,16 @@
 import Router from 'koa-router';
-import jwt from 'koa-jwt';
+import jwt from '../../middlwares/jwtCheckAndEncode';
 
 import authRoutes from './auth';
+import userRoutes from './user';
+import filesRoutes from './files';
 
 const privateAPI = new Router();
 
-privateAPI.use(jwt({ secret: process.env.SECRET_OR_KEY }));
+jwt(privateAPI);
 
 privateAPI.use('/auth', authRoutes.routes());
+privateAPI.use('/user', userRoutes.routes());
+privateAPI.use('/files', filesRoutes.routes());
 
 export default privateAPI;

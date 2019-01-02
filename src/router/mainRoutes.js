@@ -1,21 +1,18 @@
 import Home from '../views/Home.vue';
-import Signin from '../views/Signin.vue';
-import Signup from '../views/Signup.vue';
+import Profile from '../views/Profile.vue';
 
 export default [
-	{
-		path: '/',
-		name: 'home',
-		component: Home,
-	},
-	{
-		path: '/signin',
-		name: 'signin',
-		component: Signin,
-	},
-	{
-		path: '/signup',
-		name: 'signup',
-		component: Signup,
-	},
+  {
+    path: '/',
+    name: 'home',
+    component: Home,
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: Profile,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];

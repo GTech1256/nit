@@ -1,18 +1,26 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="home flex">
+    <img src="../assets/calendar.png" alt="calendar">
+    <news/>
+    <profile-frame/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import ProfileFrame from '@/components/ProfileFrame/BaseProfileFrame';
+import News from '@/components/News';
 
 export default {
-  name: 'home',
-  components: {
-    HelloWorld,
-  },
+	components: {
+		ProfileFrame,
+		News,
+	},
 };
 </script>
+<style>
+.home {
+	justify-content: space-between;
+}
+</style>
+

@@ -4,8 +4,24 @@ import routes from './mainRoutes';
 
 Vue.use(Router);
 
-export default new Router({
-	mode: 'history',
-	base: process.env.BASE_URL,
-	routes,
+const router = new Router({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes,
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('user-token') === null) {
+      next({
+        name: 'home',
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;

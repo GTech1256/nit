@@ -14,6 +14,12 @@ const userSchema = new mongoose.Schema(
     },
     password: String,
     refreshToken: [String],
+    files: [
+      {
+        url: String,
+        name: String,
+      },
+    ],
   },
   {
     timestamps: true,

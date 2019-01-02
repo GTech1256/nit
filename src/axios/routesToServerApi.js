@@ -1,6 +1,8 @@
-export const AUTH_REFRESH = 'private/auth/refresh';
+export const AUTH_REFRESH = 'public/auth/refresh';
 export const AUTH_SIGNUP = 'public/auth/signup'; // registr
 export const AUTH_SIGNIN = 'public/auth/signin'; // login
-export const LOGOUT = 'private/auth/logout';
+export const AUTH_LOGOUT = 'private/auth/logout';
+export const USER_DATA = 'private/user';
 
-export const GET_USER_DATA = 'v1/game/getUserData';
+export const FILE_UPLOAD = 'private/files/upload';
+export const FILE_REMOVE = 'private/files/remove';

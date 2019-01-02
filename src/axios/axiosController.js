@@ -9,13 +9,27 @@ import Vue from 'vue';
 import axios from 'axios';
 import { AUTH_REFRESH } from './routesToServerApi';
 
+function showWarning(error) {
+  const specSymbol = '-'.repeat(100);
+  console.log(`%c ${specSymbol}`, 'color:red; font-weight:bold');
+  console.log('%c Error by request ', 'color:red; font-weight:bold');
+  console.dir(error, { data: error.response.data });
+  console.log(`%c ${specSymbol}`, 'color:red; font-weight:bold');
+}
+
 axios.defaults.withCredentials = true; // enable cookies
 
 /* options for apiRequest */
 
+const host =	process.env.NODE_ENV === 'production'
+	  ? document.location.origin
+	  : `${document.location.protocol}//${document.location.hostname}:${
+	    process.env.VUE_APP_SERVER_PORT
+		  }`;
+
 // const apiVersion = "v1";
 export const apiRequest = axios.create({
-  baseURL: `${document.location.origin}/api/`,
+  baseURL: `${host}/api/`,
   headers: {
     Accept: 'application/json',
     Authorization: `Bearer ${localStorage.getItem('user-token')}`,
@@ -23,26 +37,25 @@ export const apiRequest = axios.create({
 });
 
 /* set headers every request */
-/*
+
 apiRequest.interceptors.request.use(
-	(config) => {
-		const token = localStorage.getItem('user-token');
+  (config) => {
+    const token = localStorage.getItem('user-token');
+    if (!token) {
+      return config;
+    }
 
-		if (!token) {
-			return config;
-		}
+    // eslint-disable-next-line no-param-reassign
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${token}`,
+    };
 
-		config.headers = {
-			...config.headers,
-			Authorization: `Bearer ${token}`,
-		};
-
-		return config;
-	},
-	error => error,
+    return config;
+  },
+  error => error,
 );
-/*
-const refreshRequest = null;
+
 /*
   if  `refreshRequest` === null,
     frontend send request for get new refreshTokenJWT
@@ -51,58 +64,48 @@ const refreshRequest = null;
 */
 
 /* check response on 401 error (Unauthorized) */
-/*
+let refreshRequest = null;
 apiRequest.interceptors.response.use(
-	r => r,
-	async (error) => {
-		const refreshToken = localStorage.getItem('user-refresh-token');
+  r => r,
+  (error) => {
+    const refreshToken = localStorage.getItem('user-refresh-token');
 
-		if (!error.response) {
-			console.error('no response', error);
-			return;
-		}
+    if (!error.response) {
+      console.error('no response', error);
+      return;
+    }
 
-		if (error.response.status !== 401) {
-			showWarning(error);
-		}
+    if (error.response.status !== 401 && process.env.NODE_ENV !== 'production') {
+      showWarning(error);
+    }
 
-		if (
-			!refreshToken
-            || error.response.status !== 401
-            || error.config.retry
-		) {
-			throw error;
-		}
+    if (!refreshToken || error.response.status !== 401 || error.config.retry) {
+      throw error;
+    }
 
-		if (!refreshRequest) {
-			refreshRequest = apiRequest.post(AUTH_REFRESH, { refreshToken });
-		}
-		const { data } = await refreshRequest;
+    if (!refreshRequest) {
+      refreshRequest = apiRequest.post(AUTH_REFRESH, { refreshToken });
+    }
 
-		refreshRequest = null;
+    return refreshRequest
+      .then(({ data }) => {
+        refreshRequest = null;
 
-		localStorage.setItem('token', data.token);
-		localStorage.setItem('refreshToken', data.refreshToken);
+        localStorage.setItem('user-token', data.token);
+        localStorage.setItem('user-refresh-token', data.refreshToken);
 
-		const newRquest = {
-			...error.config,
-			retry: true,
-		};
+        const newRquest = {
+          ...error.config,
+          retry: true,
+        };
 
-		return apiRequest(newRquest);
-	},
+        return apiRequest(newRquest);
+      })
+      .catch(() => {
+        localStorage.removeItem('user-token');
+        localStorage.removeItem('user-refresh-token');
+      });
+  },
 );
-
-/**
- * TOOD: make check on realise/develop env
- * @param {*} error
- */
-function showWarning(error) {
-  const specSymbol = '-'.repeat(100);
-  console.log(`%c ${specSymbol}`, 'color:red; font-weight:bold');
-  console.log('%c Error by request ', 'color:red; font-weight:bold');
-  console.dir(error, { data: error.response.data });
-  console.log(`%c ${specSymbol}`, 'color:red; font-weight:bold');
-}
 
 Vue.prototype.$apiRequest = apiRequest; // set global Api Request

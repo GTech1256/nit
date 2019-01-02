@@ -20,7 +20,7 @@ export function getRefreshToken(user) {
 export function jwtSign(user) {
   const payload = getPayloadForAuth(user);
 
-  const opts = { expiresIn: '10m' };
+  const opts = { expiresIn: process.env.EXPIRES_IN };
 
   return jwt.sign(payload, process.env.SECRET_OR_KEY, opts);
 }
