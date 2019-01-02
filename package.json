@@ -9,14 +9,14 @@
 		"dev:server": "cross-env NODE_ENV=development nodemon --exec babel-node server/index.js",
 		"build:server": "cross-env NODE_ENV=production babel server --out-dir ./dist/server --copy-files",
 		"serve:server": "cross-env NODE_ENV=development nodemon --exec babel-node ./server/index.js",
-		"build": "cross-env NODE_ENV=production yarn build:front && yarn build:server",
-		"serve": "cross-env NODE_ENV=production yarn build && yarn ss",
-		"start": "yarn build && yarn start:dist",
+		"build": "cross-env NODE_ENV=production npm run build:front && npm run build:server",
+		"serve": "cross-env NODE_ENV=production npm run build && npm run ss",
+		"start": "npm run build && npm run start:dist",
 		"start:dist": "cross-env NODE_ENV=production node dist/server/index.js",
-		"sf": "yarn serve:front",
-		"ss": "yarn serve:server",
-		"bf": "yarn build:front",
-		"bs": "yarn build:server"
+		"sf": "npm run serve:front",
+		"ss": "npm run serve:server",
+		"bf": "npm run build:front",
+		"bs": "npm run build:server"
 	},
 	"dependencies": {
 		"@babel/polyfill": "^7.2.5",
