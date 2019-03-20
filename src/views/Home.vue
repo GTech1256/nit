@@ -21,6 +21,7 @@ export default {
 <style>
 .home {
 	justify-content: space-between;
+	flex-wrap: wrap;
 }
 </style>
 
