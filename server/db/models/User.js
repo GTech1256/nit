@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import bcryptjs from 'bcryptjs';
 
+import config from '../../config';
+
 const userSchema = new mongoose.Schema(
   {
     firstName: String,
@@ -20,6 +22,11 @@ const userSchema = new mongoose.Schema(
         name: String,
       },
     ],
+    roles: [{
+      type: String,
+      enum: config.userRoles,
+      default: 'user',
+    }],
   },
   {
     timestamps: true,

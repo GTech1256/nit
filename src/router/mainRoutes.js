@@ -1,11 +1,11 @@
-import Home from '../views/Home.vue';
-import Profile from '../views/Profile.vue';
+import Index from '../views/index/Index.vue';
+import Profile from '../views/profile/index.vue';
 
 export default [
   {
     path: '/',
-    name: 'home',
-    component: Home,
+    name: 'index',
+    component: Index,
   },
   {
     path: '/profile',

@@ -76,7 +76,7 @@ export default router
     const pwdIsValid = await User.checkPassword(password, user.password);
 
     if (!pwdIsValid) {
-      return ctx.throw(400);
+      return ctx.throw(400, 'Password or email not valid');
     }
 
     const refreshToken = getRefreshToken(user);
@@ -93,7 +93,7 @@ export default router
     };
     return next;
   })
-  .post('/signup', async (ctx) => {
+  .post('/signup', async (ctx, next) => {
     const resultOfUnique = await isUniqueParamsForUser(ctx.state.joiValidValues.email);
 
     if (!resultOfUnique.unique) {
@@ -112,5 +112,5 @@ export default router
       success: true,
     };
 
-    return ctx.throw(200);
+    return next;
   });

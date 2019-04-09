@@ -5,13 +5,12 @@ const whitelistOfOriginsCors = [
   'https://nit.ru',
   'http://localhost',
   'http://localhost:81',
+  'http://localhost:8080',
   'https://localhost',
   'https://localhost:81',
+  'http://192.168.56.1:8081',
+  'http://192.168.56.1:8080',
 ];
-
-if (process.env.ORIGIN_FOR_CORS) {
-  whitelistOfOriginsCors.push(process.env.ORIGIN_FOR_CORS);
-}
 
 function checkOriginAgainstWhitelist(ctx) {
   const requestOrigin = ctx.accept.headers.origin;

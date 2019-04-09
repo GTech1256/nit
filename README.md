@@ -8,9 +8,9 @@
 
 ## Deploy project
 
-1. ```console yarn install```
-1. ```console yarn build```
-1. change `app.use((0, _koaStatic.default)(_path.default.resolve('dist/front')));` to `app.use((0, _koaStatic.default)(_path.default.resolve('front')));`
+1. ```console npm install```
+1. ```console npm build```
+1. ```console git add . && git commit -am '.' && git push heroku master ```
 
 ### Develop server+front (hot reload)
 

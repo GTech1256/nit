@@ -1,6 +1,6 @@
 <template>
   <ul class="header">
-    <router-link class="header_item" :to="{ name: 'home' }" tag="li">home</router-link>
+    <router-link class="header_item" :to="{ name: 'index' }" tag="li">home</router-link>
   </ul>
 </template>
 <style lang="scss">

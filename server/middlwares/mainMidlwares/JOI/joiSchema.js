@@ -9,13 +9,27 @@ const textJoiValidator = Joi.string()
   .required();
 
 export default {
-  public_auth_refresh: {
+  'GET:public_news': {
+    rule: Joi.object().keys({
+      page: Joi
+
+        .number()
+        .integer()
+        .min(1)
+        .allow(null)
+        .default(1),
+      // .required(),
+      // password: passwordJoiValidator,
+    }),
+    objectIn: 'params',
+  },
+  'POST:public_auth_refresh': {
     rule: Joi.object().keys({
       refreshToken: Joi.string().required(),
     }),
     objectIn: 'body',
   },
-  public_auth_signin: {
+  'POST:public_auth_signin': {
     rule: Joi.object().keys({
       email: Joi.string()
         .email()
@@ -24,7 +38,7 @@ export default {
     }),
     objectIn: 'body',
   },
-  public_auth_signup: {
+  'POST:public_auth_signup': {
     rule: Joi.object().keys({
       firstName: textJoiValidator,
       lastName: textJoiValidator,

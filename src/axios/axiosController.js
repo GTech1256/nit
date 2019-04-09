@@ -21,11 +21,11 @@ axios.defaults.withCredentials = true; // enable cookies
 
 /* options for apiRequest */
 
-const host =	process.env.NODE_ENV === 'production'
-	  ? document.location.origin
-	  : `${document.location.protocol}//${document.location.hostname}:${
-	    process.env.VUE_APP_SERVER_PORT
-		  }`;
+const host = process.env.NODE_ENV === 'production'
+  ? document.location.origin
+  : `//${process.env.VUE_APP_SERVER_HOST}:${
+    process.env.VUE_APP_SERVER_PORT
+  }`;
 
 // const apiVersion = "v1";
 export const apiRequest = axios.create({

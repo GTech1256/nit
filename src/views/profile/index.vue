@@ -23,7 +23,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import types from '../store/modules/user/TYPES';
+import types from '../../store/modules/user/TYPES';
 export default {
 	methods: {
 		sendFile(event) {

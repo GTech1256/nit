@@ -14,7 +14,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('user-token') === null) {
       next({
-        name: 'home',
+        name: 'index',
       });
     } else {
       next();

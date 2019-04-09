@@ -12,13 +12,14 @@ import corsController from './CORS';
 import joiController from './JOI/index';
 
 export default (app) => {
+  app.use(corsController);
   app.use(logger());
   app.use(json());
   app.use(bodyParser({ multipart: true })); // ctx.request.body;
   app.use(cookie()); // ctx.cookie
   app.use(helmet());
 
-  app.use(corsController);
+
   app.use(joiController);
 
   app.on('error', (err) => {
@@ -38,5 +39,5 @@ export default (app) => {
   }
 
   app.use(historyApiFallback());
-  app.use(serve(path.resolve('dist/front')));
+  app.use(serve(path.resolve(process.env.NODE_ENV === 'production' ? 'front' : 'dist/front')));
 };

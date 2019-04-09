@@ -1,13 +1,20 @@
-import './config';
-import '@babel/polyfill';
-import server from './app';
+import Koa from 'koa';
+import mainMiddlwares from './middlwares/mainMidlwares';
+import routes from './routes';
 
-try {
-  const { PORT } = process.env;
+import './db/index';
 
-  server.listen(PORT, () => {
-    console.log(`Koa is listening in ${PORT}`);
-  });
-} catch (e) {
-  console.log(e);
-}
+const app = new Koa();
+
+mainMiddlwares(app);
+
+app.use(routes);
+
+
+const { VUE_APP_SERVER_PORT } = process.env;
+
+app.listen(VUE_APP_SERVER_PORT, () => {
+  console.log(`Koa is listening in ${VUE_APP_SERVER_PORT}`);
+});
+
+export default app;
