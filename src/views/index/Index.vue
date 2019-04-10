@@ -1,7 +1,16 @@
 <template>
-  <div class="home flex">
+  <div class="home">
+
+    <div class="news block">
+      <news/>
+    </div>
 		
-    <vue-cal selected-date="2018-11-19"
+    <div class="callendar-wrapper block">
+      <div class="callendar">
+        <b-badge class="callendar-badge" variant="primary">События</b-badge>
+      <vue-cal 
+        selected-date="2018-11-19"
+        class="callendar-content center-block col-6"
          xsmall
          :time-from="10 * 60"
          :time-step="2 * 60"
@@ -12,15 +21,17 @@
 					{{ countEventsMonthView(events) }}
 				</span>
 		</vue-cal>
+      </div>
+      
+    </div>
+    
 		
-    <news/>
-    <profile-frame/>
+    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import ProfileFrame from '@/components/ProfileFrame/BaseProfileFrame';
 import News from '@/components/News/index';
 
 import VueCal from 'vue-cal'
@@ -28,7 +39,6 @@ import 'vue-cal/dist/vuecal.css'
 
 export default {
 	components: {
-		ProfileFrame,
 		VueCal,
 		News,
 	},
@@ -68,10 +78,33 @@ export default {
 	}
 };
 </script>
-<style>
+<style lang="scss" scoped>
 .home {
 	justify-content: space-between;
 	flex-wrap: wrap;
+}
+
+.block {
+  padding: 20px;
+
+}
+
+.news {
+  min-height: 70vh;
+}
+
+.callendar-wrapper {
+  background-color: lighten(#17a2b8, 50%);
+}
+
+.callendar-badge {
+  font-size: 22px;
+}
+
+.callendar-content {
+  margin: auto;
+  margin-top: 20px;
+  background-color: white;
 }
 
 .vuecal__cell-events-count {background: transparent;}

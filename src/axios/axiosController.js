@@ -87,6 +87,7 @@ apiRequest.interceptors.response.use(
       refreshRequest = apiRequest.post(AUTH_REFRESH, { refreshToken });
     }
 
+    // eslint-disable-next-line consistent-return
     return refreshRequest
       .then(({ data }) => {
         refreshRequest = null;

@@ -1,5 +1,5 @@
 <template>
-  <div class="article" :class="{ editable: isEditable }" :style="{ opacity: isNotSaved ? '0.5' : 1 }" >
+  <b-card class="article col-2 offset-1" :class="{ editable: isEditable }" :style="{ opacity: isNotSaved ? '0.5' : 1 }" >
     <div class="article_img-wrapper">
       <img class="article-img" :src="articleData.image.Location" :alt="articleData.image.ETag" @click="uploadNewImage">
       <input type="file">
@@ -8,15 +8,17 @@
     <input class="article_title" v-model="articleData.text" >
     <div class="article_sub">
       <span class="article_sub-date" @click="setNewDate">{{ new Date(articleData.date).toLocaleDateString() }}</span>
-      <span class="article_sub-more">Подробнее</span>
+      <b-link href="#" class="card-link">Подробнее</b-link>
     </div>
     <div v-if="isEditingArticle" class="article_edit-panel">
       <button @click="saveArticle()">save</button>
       <button @click="resetArticle()">revert</button>
     </div>
-  </div>
+  </b-card>
 </template>
 <script>
+import cloneDeep from 'lodash/cloneDeep';
+
 export default {
   props: {
     isEditable: {
@@ -41,7 +43,7 @@ export default {
   },
   data() {
     return {
-      articleData: this.articleDataProps,
+      articleData: cloneDeep(this.articleDataProps),
       isEditingArticle: false
     }
   },
@@ -53,7 +55,8 @@ export default {
 
     },
     resetArticle() {
-      this.articleData = this.articleDataProps
+      this.articleData = cloneDeep(this.articleDataProps);
+      this.$nextTick(() => this.isEditingArticle = false );
     },
     uploadNewImage() {
 
@@ -61,15 +64,12 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.article {
-  height: 300px;
-  width: 150px;
-  border: 1px solid black;
+<style lang="scss" scoped>
+.card, .card-body {
+  padding: 0;
 }
 
 .article_img-wrapper {
-  width: 150px;
   height: 150px;
   overflow: hidden;
   background-color: #7f7f7f;
@@ -95,5 +95,11 @@ export default {
   input, .article_sub-date, .article-img {
     pointer-events: none;
   }
+}
+
+input {
+  border: transparent;
+  outline: none;
+  background: transparent;
 }
 </style>
