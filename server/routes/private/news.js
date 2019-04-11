@@ -10,20 +10,28 @@ const router = new Router();
 
 
 export default router
+  .put('/upload/image', permission(['superadmin', 'admin', 'moderator']), async (ctx) => {
+    let { joiValidValues } = ctx.state;
+
+    console.log(joiValidValues, 'JOII NEWWS')
+
+    const article = await News.findById(joiValidValues._id)
+    if (article.image.Key) {
+      await removeFileToS3(article.image.Key);
+    }
+    console.log(ctx.request.files.image, 'FILEESSS')
+    const image = await uploadFileToS3(ctx.request.files.image); // upload new image
+
+    ctx.body = await News.findOneAndUpdate({ _id: joiValidValues._id }, {
+      image
+    });
+  })
   /**
    * EDIT article of news
    * @body { ?AWSS3Image:oldImage, String:title, String:text, Date:date, Boolean:isEditedImage, ?FormData:image }
    */
-  .put('/', permission(['superadmin', 'admin', 'moderator']), async (ctx) => {
-    let { image } = ctx.state.joiValidValues;
-
-    if (ctx.state.joiValidValues.isEditedImage) {
-      await removeFileToS3(ctx.state.joiValidValues.oldImage.Key);
-      image = await uploadFileToS3(image); // upload new image if older changed
-    }
-
-    ctx.body = await News.findOneAndUpdate({ _id: ctx.state.joiValidValues.id }, {
-      image,
+  .put('/upload/text', permission(['superadmin', 'admin', 'moderator']), async (ctx) => {
+    ctx.body = await News.findOneAndUpdate({ _id: ctx.state.joiValidValues._id }, {
       title: ctx.state.joiValidValues.title,
       text: ctx.state.joiValidValues.text,
       date: ctx.state.joiValidValues.date,
@@ -37,9 +45,8 @@ export default router
    *    200 - <news>
    *    xxx -
    */
-  .post('/', permission(['superadmin', 'admin', 'moderator']), async (ctx) => {
+  .post('/upload/text', permission(['superadmin', 'admin', 'moderator']), async (ctx) => {
     ctx.body = await News.create({
-      image: await uploadFileToS3(ctx.state.joiValidValues.image),
       title: ctx.state.joiValidValues.title,
       text: ctx.state.joiValidValues.text,
       date: ctx.state.joiValidValues.date,
@@ -52,19 +59,17 @@ export default router
    * @return 200|404
    */
   .delete('/', permission(['superadmin', 'admin', 'moderator']), async (ctx) => {
-    const article = await News.findById(ctx.state.joiValidValues.id);
+    const { _id } = ctx.state.joiValidValues;
+    const article = await News.findById(_id);
 
     if (!article) {
       return ctx.throw(404);
     }
 
     /* remove image from AWS */
-    const { url } = await removeFileToS3(article.image.Key);
+    await removeFileToS3(article.image.Key);
 
-    ctx.body = await News.create({
-      image: url,
-      title: ctx.state.joiValidValues.title,
-      text: ctx.state.joiValidValues.text,
-      date: ctx.state.joiValidValues.date,
+    await News.deleteOne({
+      _id
     });
   });

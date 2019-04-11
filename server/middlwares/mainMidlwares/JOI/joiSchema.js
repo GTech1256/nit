@@ -9,6 +9,37 @@ const textJoiValidator = Joi.string()
   .required();
 
 export default {
+  'DELETE:private_news': {
+    rule: Joi.object().keys({
+      _id: Joi.required()
+    }),
+    objectIn: 'query'
+  },
+  'POST:private_news_upload_text': {
+    rule: Joi.object().keys({
+      title: Joi.string().required(),
+      text: Joi.string().required(),
+      date: Joi.date().required(),
+      // image: Joi.allow()
+    }),
+    objectIn: ['body', 'query'],
+  },
+  'PUT:private_news_upload_text': {
+    rule: Joi.object().keys({
+      _id: Joi.required(),
+      title: Joi.string().required(),
+      text: Joi.string().required(),
+      date: Joi.date().required()
+    }),
+    objectIn: 'body',
+  },
+  'PUT:private_news_upload_image': {
+    rule: Joi.object().keys({
+      _id: Joi.required(),
+      // image: Joi.required()
+    }),
+    objectIn: ['body', 'query'],
+  },
   'GET:public_news': {
     rule: Joi.object().keys({
       page: Joi
@@ -21,7 +52,7 @@ export default {
       // .required(),
       // password: passwordJoiValidator,
     }),
-    objectIn: 'params',
+    objectIn: 'query',
   },
   'POST:public_auth_refresh': {
     rule: Joi.object().keys({

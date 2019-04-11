@@ -68,7 +68,7 @@ export default router
     });
 
     if (user === null) {
-      return ctx.throw(400, {
+      return ctx.throw(404, {
         message: 'user not exist',
       });
     }
@@ -91,7 +91,7 @@ export default router
       token,
       refreshToken,
     };
-    return next;
+    // return next;
   })
   .post('/signup', async (ctx, next) => {
     const resultOfUnique = await isUniqueParamsForUser(ctx.state.joiValidValues.email);

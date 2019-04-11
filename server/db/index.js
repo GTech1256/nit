@@ -1,5 +1,5 @@
 import './event';
-
+import init from './init';
 import mongoose from 'mongoose';
 
 mongoose.set('debug', process.env.DEBUG);
@@ -50,6 +50,7 @@ mongoose
   .then(
     () => {
       console.log('Database connected');
+      init();
     },
     () => {
       console.error('Connect to database broken');
