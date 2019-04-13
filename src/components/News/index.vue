@@ -53,7 +53,7 @@ export default {
 </script>
 <style>
 .news {
-	min-width: 600px;
+	
 }
 
 .news_container {
