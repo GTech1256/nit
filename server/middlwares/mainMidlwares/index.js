@@ -13,6 +13,8 @@ import joiController from './JOI/index';
 
 export default (app) => {
   app.use(corsController);
+  
+  app.use(serve(path.resolve('dist/front')));
   app.use(logger());
   app.use(json());
   app.use(bodyParser({ multipart: true })); // ctx.request.body;
@@ -39,5 +41,5 @@ export default (app) => {
   }
 
   app.use(historyApiFallback());
-  app.use(serve(path.resolve(process.env.NODE_ENV === 'production' ? 'front' : 'dist/front')));
+  
 };
