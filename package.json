@@ -75,8 +75,6 @@
 		"sass-loader": "^7.1.0",
 		"vue-template-compiler": "^2.5.17"
 	},
-	"devDependencies": {
-		
-	},
+	"devDependencies": {},
 	"author": "vk.com/greentech1256"
 }
