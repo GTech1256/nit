@@ -10,8 +10,6 @@ mainMiddlwares(app);
 
 app.use(routes);
 
-
-
 const { VUE_APP_SERVER_PORT, PORT, NODE_ENV } = process.env;
 
 const serverPort = NODE_ENV === 'production' ? PORT : VUE_APP_SERVER_PORT;

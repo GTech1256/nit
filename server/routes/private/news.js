@@ -1,29 +1,27 @@
+/* eslint-disable no-underscore-dangle */
 import Router from 'koa-router';
-
-import { uploadFileToS3, removeFileToS3 } from '../../utils/AWS';
-
+import { uploadFileToFirebase, removeFileFromFirebase } from '../../utils/Firebase/Storage';
 import News from '../../db/models/News';
-
 import permission from '../../middlwares/permission';
 
 const router = new Router();
 
-
 export default router
   .put('/upload/image', permission(['superadmin', 'admin', 'moderator']), async (ctx) => {
-    let { joiValidValues } = ctx.state;
+    const { joiValidValues } = ctx.state;
 
-    console.log(joiValidValues, 'JOII NEWWS')
-
-    const article = await News.findById(joiValidValues._id)
+    const article = await News.findById(joiValidValues._id);
     if (article.image.Key) {
-      await removeFileToS3(article.image.Key);
+      await removeFileFromFirebase(article.image.Key);
     }
-    console.log(ctx.request.files.image, 'FILEESSS')
-    const image = await uploadFileToS3(ctx.request.files.image); // upload new image
+
+    const image = await uploadFileToFirebase(ctx.request.files.image); // upload new image
+
+    console.log(image);
+
 
     ctx.body = await News.findOneAndUpdate({ _id: joiValidValues._id }, {
-      image
+      image,
     });
   })
   /**
@@ -67,9 +65,9 @@ export default router
     }
 
     /* remove image from AWS */
-    await removeFileToS3(article.image.Key);
+    await removeFileFromFirebase(article.image.Key);
 
     await News.deleteOne({
-      _id
+      _id,
     });
   });

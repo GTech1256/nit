@@ -1,22 +1,36 @@
 <template>
   <div>
-    <h2 class="news">News</h2>
-    <button @click="isShowNotSavedNews = true" v-if="isProfileLoaded">add new news</button>
+    <news-create-modal
+      v-model="isShowNewsCreateModal"
+    />
+    <h2 class="news">Новости</h2>
+    <b-button
+      id="btn-show-create-news"
+      @click="isShowNewsCreateModal = true"
+      v-if="isProfileLoaded"
+    >
+      Добавить новую новость
+    </b-button>
     <div class="news_container">
-    <news-article v-if="isShowNotSavedNews" :articleDataProps="{image: { ETag: 'n'}, title: 'n', text: 'n', date: Date.now()}" :isEditable="canEditNews" :isNotSaved="true" @saved="onSaveNewArticle"/>
-    <!-- all current news -->
-    <news-article v-for="article in data.data" :key="article.id" :articleDataProps="article" :isEditable="canEditNews" />
+      <news-article
+        v-for="article in data.data"
+        :key="article.id"
+        v-bind="article"
+        :isEditable="canEditNews"
+      />
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import Article from './Article';
+import Article from './Article.vue';
+import NewsCreateModal from './NewsCreateModal/NewsCreateModal.vue';
 import { getNews } from '@/api/news';
 
 export default {
   components: {
-    NewsArticle: Article
+    NewsArticle: Article,
+    NewsCreateModal,
   },
   data() {
     return {
@@ -24,36 +38,37 @@ export default {
         meta: {
 
         },
-        data: []
+        data: [],
       },
-      isShowNotSavedNews: false
-    }
+      isShowNewsCreateModal: false,
+    };
   },
-  async mounted() {
-    getNews().then(({ data }) => this.data = data).catch(console.dir)
+  mounted() {
+    getNews()
+      .then(({ data }) => {
+        this.data = data;
+      });
   },
   computed: {
     canEditNews() {
       return true;
     },
-    ...mapGetters(['isProfileLoaded'])
+    ...mapGetters(['isProfileLoaded']),
   },
   methods: {
     onSaveNewArticle(article) {
-      console.log(article)
-      let newArray = [article].concat(this.data.data);
+      const newArray = [...article, this.data.data];
       newArray.length = 10;
 
-      console.log(newArray)
       this.data.data = newArray;
-      this.isShowNotSavedNews = false;
-    }
-  }
-}
+      this.isShowNewsCreateModal = false;
+    },
+  },
+};
 </script>
 <style>
 .news {
-	
+
 }
 
 .news_container {
@@ -62,4 +77,3 @@ export default {
   flex-wrap: wrap;
 }
 </style>
-

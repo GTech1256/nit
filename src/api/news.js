@@ -1,5 +1,30 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/prefer-default-export */
 import { apiRequest } from '../axios/axiosController';
+
+/**
+ * @typedef {Object} FileBucket - Bucket file
+ * @property {String} Location - URL of the uploaded object.
+ * @property {String} ETag - ETag of the uploaded object.
+ * @property {Date} Bucket - Bucket to which the object was uploaded.
+ * @property {Date} Key - Key to which the object was uploaded. (FOR DELETE)
+ */
+
+/**
+ * @typedef {Object} ArticleWithBucketFile
+ * @property {String} text
+ * @property {String} title
+ * @property {Date} date
+ * @property {FileBucket} image
+ */
+
+/**
+ * @typedef {Object} ArticleWithRawFile
+ * @property {String} text
+ * @property {String} title
+ * @property {Date} date
+ * @property {File} image
+ */
 
 export function getNews(page = 1) {
   return apiRequest({
@@ -9,56 +34,77 @@ export function getNews(page = 1) {
   });
 }
 
-
 /**
-   * ADD new article of news
-   * @body { ?FormData:image, String:title, String:text, ?Date:date }
-   *
-   * @return
-   *    200 - <news>
-   *    xxx -
-   */
-export function uploadArticle(data, image) {
-  return apiRequest({
-    method: 'post',
-    url: '/private/news/upload/text',
-    data
-  }).then(({ data }) => updateArticleImage(data, image))
-}
-
-export function updateArticle(data, image) {
-  return apiRequest({
-    method: 'put',
-    url: '/private/news/upload/text',
-    data, 
-    params: {
-      _id
-    }
-  }).then(({ data }) => updateArticleImage(data, image))
-}
-
+ * @export
+ * @param {{ _id: String }} { _id } - id новости
+ * @param {File} image - фаил фотографии
+ * @return {ArticleWithBucketFile}
+ */
 export function updateArticleImage({ _id }, image) {
   const fs = new FormData();
   fs.append('image', image);
-
+  console.log('updateArticleImage');
   return apiRequest({
     method: 'put',
     url: '/private/news/upload/image',
     params: {
-      _id
+      _id,
     },
-    data: fs
+    data: fs,
+  });
+}
+
+
+/**
+ * @export
+ * @param {ArticleWithRawFile} payload
+ * @param {*} image
+ * @return {ArticleWithBucketFile}
+ */
+export function uploadArticle(payload) {
+  console.log('UPLOAD');
+  const textData = { ...payload };
+
+  delete textData.image;
+
+
+  return apiRequest({
+    method: 'post',
+    url: '/private/news/upload/text',
+    data: textData,
   })
+    .then(({ data: createdArticle }) => updateArticleImage(createdArticle, payload.image));
 }
 
 /**
- * 
- * @param {Object} params - { _id } 
+ * @export
+ * @param {ArticleWithRawFile} payload
+ * @param {*} image
+ * @return {ArticleWithBucketFile}
+ */
+export function updateArticle(payload) {
+  const textData = { ...payload };
+
+  delete textData.image;
+
+  return apiRequest({
+    method: 'put',
+    url: '/private/news/upload/text',
+    data: textData,
+    params: {
+      _id: payload._id,
+    },
+  })
+    .then(({ data: createdArticle }) => updateArticleImage(createdArticle, payload.image));
+}
+
+/**
+ * @param {{_id: String}} params - { _id }
  */
 export function deleteArticle(params) {
   return apiRequest({
     method: 'delete',
     url: '/private/news',
-    params
-  })
+    params,
+  });
 }

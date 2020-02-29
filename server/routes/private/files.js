@@ -1,6 +1,7 @@
 import Router from 'koa-router';
 import User from '../../db/models/User';
-import { uploadFileToS3, removeFileToS3 } from '../../utils/AWS';
+// import { uploadFileToS3, removeFileToS3 } from '../../utils/AWS';
+import { uploadFileToFirebase, removeFileFromFirebase } from '../../utils/Firebase/Storage';
 
 const router = new Router();
 
@@ -9,7 +10,7 @@ export default router
     try {
       const { file } = ctx.request.files;
       file.name = `${ctx.state.user.email}_${Date.now()}|${file.name}`;
-      const res = await uploadFileToS3(file);
+      const res = await uploadFileToFirebase(file);
 
       const data = {
         url: res.Location,
@@ -28,7 +29,7 @@ export default router
     try {
       const { name } = ctx.request.body;
 
-      await removeFileToS3(name);
+      await removeFileFromFirebase(name);
       await User.findOneAndUpdate({ email: ctx.state.user.email }, { $pull: { files: { name } } });
 
       ctx.status = 200;
