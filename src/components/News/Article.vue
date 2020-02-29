@@ -19,33 +19,35 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 
+// import types from '@/store/modules/news';
+
 export default {
   props: {
     isEditable: {
       type: Boolean,
-      required: true
+      required: true,
     },
     isNotSaved: {
       type: Boolean,
     },
     articleDataProps: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
     articleData: {
       handler() {
-      this.isEditingArticle = true;
+        this.isEditingArticle = true;
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   data() {
     return {
       articleData: cloneDeep(this.articleDataProps),
-      isEditingArticle: false
-    }
+      isEditingArticle: false,
+    };
   },
   methods: {
     setNewDate() {
@@ -56,13 +58,15 @@ export default {
     },
     resetArticle() {
       this.articleData = cloneDeep(this.articleDataProps);
-      this.$nextTick(() => this.isEditingArticle = false );
+      this.$nextTick(() => {
+        this.isEditingArticle = false;
+      });
     },
     uploadNewImage() {
 
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .card, .card-body {
@@ -88,7 +92,7 @@ export default {
   input, .article_sub-date, .article-img {
     cursor: pointer;
   }
-  
+
 }
 
 .article:not(.editable) {
