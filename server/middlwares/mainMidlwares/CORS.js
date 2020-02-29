@@ -15,6 +15,10 @@ const whitelistOfOriginsCors = [
 function checkOriginAgainstWhitelist(ctx) {
   const requestOrigin = ctx.accept.headers.origin;
 
+  if (process.env.ORIGIN_FOR_CORS && process.env.ORIGIN_FOR_CORS === requestOrigin) {
+    return requestOrigin;
+  }
+
   if (!whitelistOfOriginsCors.includes(requestOrigin)) {
     return ctx.throw(403, `🙈 ${requestOrigin} is not a valid origin`);
   }

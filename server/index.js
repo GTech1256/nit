@@ -11,10 +11,13 @@ mainMiddlwares(app);
 app.use(routes);
 
 
-const { VUE_APP_SERVER_PORT } = process.env;
 
-app.listen(VUE_APP_SERVER_PORT, () => {
-  console.log(`Koa is listening in ${VUE_APP_SERVER_PORT}`);
+const { VUE_APP_SERVER_PORT, PORT, NODE_ENV } = process.env;
+
+const serverPort = NODE_ENV === 'production' ? PORT : VUE_APP_SERVER_PORT;
+
+app.listen(serverPort, () => {
+  console.log(`Koa is listening in ${serverPort}`);
 });
 
 export default app;

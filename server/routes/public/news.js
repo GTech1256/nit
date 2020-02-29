@@ -15,7 +15,7 @@ export default router
         newsOnPage,
         currentPage,
       },
-      data: await News.find().limit(newsOnPage).skip(currentPage * newsOnPage),
+      data: await News.find().sort({ date: -1 }) .limit(newsOnPage).skip(currentPage * newsOnPage),
     };
 
     return next;

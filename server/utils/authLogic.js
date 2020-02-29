@@ -7,6 +7,7 @@ export function getPayloadForAuth(user) {
   }
   return {
     email: user.email,
+    roles: user.roles
     // username: user.username, // fisrt, last, sur
     // roles: user.roles,
   };
