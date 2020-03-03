@@ -11,10 +11,11 @@ const schema = new mongoose.Schema(
      * @Key - Key to which the object was uploaded.
      */
     image: {
-      Location: String, // URL of the uploaded object.
-      ETag: String, // ETag of the uploaded object.
-      Bucket: String, // Bucket to which the object was uploaded.
-      Key: String, // Key to which the object was uploaded. (FOR DELETE)
+      url: String, // URL of the uploaded object.
+      name: String, // ETag of the uploaded object.
+      meta: {
+
+      },
     },
     text: String,
     date: Date,

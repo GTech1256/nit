@@ -2,19 +2,23 @@
   <div>
     <news-create-modal
       v-model="isShowNewsCreateModal"
+      @created="handleNewsCreate"
     />
     <h2 class="news">Новости</h2>
     <b-button
-      id="btn-show-create-news"
-      @click="isShowNewsCreateModal = true"
       v-if="isProfileLoaded"
+      id="btn-show-create-news"
+      class="mb-2 mt-2"
+      variant="outline-primary"
+      @click="isShowNewsCreateModal = true"
     >
       Добавить новую новость
     </b-button>
-    <div class="news_container">
+    <div class="news__container">
       <news-article
         v-for="article in data.data"
-        :key="article.id"
+        :key="article._id"
+        class="news__article"
         v-bind="article"
         :isEditable="canEditNews"
       />
@@ -23,9 +27,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
+import { getNews } from '@/api/news';
 import Article from './Article.vue';
 import NewsCreateModal from './NewsCreateModal/NewsCreateModal.vue';
-import { getNews } from '@/api/news';
 
 export default {
   components: {
@@ -56,8 +60,8 @@ export default {
     ...mapGetters(['isProfileLoaded']),
   },
   methods: {
-    onSaveNewArticle(article) {
-      const newArray = [...article, this.data.data];
+    handleNewsCreate(article) {
+      const newArray = [article, ...this.data.data];
       newArray.length = 10;
 
       this.data.data = newArray;
@@ -71,9 +75,14 @@ export default {
 
 }
 
-.news_container {
+.news__container {
   display: flex;
-  justify-content: space-around;
+  width: 80%;
+  margin: 0 auto;
   flex-wrap: wrap;
+}
+
+.news__article {
+  margin-bottom: 50px;
 }
 </style>

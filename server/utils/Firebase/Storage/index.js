@@ -1,33 +1,39 @@
-const admin = require('firebase-admin');
-
+const firebase = require('firebase-admin');
 const serviceAccount = require('./@private-firebase.json');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+
+firebase.initializeApp({
+  credential: firebase.credential.cert(serviceAccount),
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
 });
 
-export function getFiles() {
-  const bucket = admin.storage().bucket();
 
-  console.log(bucket);
-}
-
-export async function uploadFileToFirebase(file) {
-  console.log();
-  console.log();
-  console.log(file, 'FILE', file.name);
-  console.log();
-  console.log();
-
-  return admin
+export const uploadFileToFirebase = file => new Promise((resolve, reject) => {
+  firebase
     .storage()
     .bucket()
-    .put(file);
-}
+    .upload(file.path, async (err, uploadedFile) => {
+      if (err) {
+        return reject(err);
+      }
+
+      await uploadedFile.makePublic();
+
+      const [url] = await uploadedFile.getSignedUrl({
+        action: 'read',
+        expires: new Date(2020, 3, 3, 22, 22, 0, 0),
+      });
+
+
+      return resolve({
+        name: uploadedFile.metadata.name,
+        url,
+      });
+    });
+});
 
 export function removeFileFromFirebase(filename) {
-  return admin
+  return firebase
     .storage()
     .bucket()
     .file(filename)

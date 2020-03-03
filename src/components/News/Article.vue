@@ -4,14 +4,17 @@
   >
     <div class="article__image-placeholder">
       <img
-        class="article-img"
+        class="article__image"
         v-if="image"
-        :src="image.Location"
+        :src="image.url"
+        :alt="image.name"
+        width="300"
+        height="100"
       >
     </div>
 
     <p>{{title}}</p>
-    <p>{{text}}</p>
+    <p class="article__content">{{text}}</p>
     <div class="article__sub">
       <span
         class="article__sub-date"
@@ -45,7 +48,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .card, .card-body {
+  display: flex;
   padding: 0;
+
+  flex-direction: column;
 }
 
 .article {
@@ -70,5 +76,9 @@ export default {
 .article__image {
   width: 100%;
   height: 100%
+}
+
+.article__content {
+  margin-bottom: auto;
 }
 </style>

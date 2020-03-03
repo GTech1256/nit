@@ -1,7 +1,7 @@
 import User from './models/User';
 
 export default async () => {
-  const { SUPERADMIN_EMAIL = 'Superadmin@nit.ru', SUPERADMIN_PASSWORD = 'Secret' } = process.env;
+  const { SUPERADMIN_EMAIL = 'superadmin@nit.ru', SUPERADMIN_PASSWORD = 'secret' } = process.env;
 
   const admin = await User.findOne({ email: SUPERADMIN_EMAIL });
 

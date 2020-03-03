@@ -15,14 +15,10 @@ export default router
       await removeFileFromFirebase(article.image.Key);
     }
 
-    const image = await uploadFileToFirebase(ctx.request.files.image); // upload new image
-
-    console.log(image);
+    const image = await uploadFileToFirebase(ctx.request.files.image);
 
 
-    ctx.body = await News.findOneAndUpdate({ _id: joiValidValues._id }, {
-      image,
-    });
+    ctx.body = await News.findByIdAndUpdate(joiValidValues._id, { image }, { new: true });
   })
   /**
    * EDIT article of news

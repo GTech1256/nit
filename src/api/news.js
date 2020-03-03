@@ -43,7 +43,7 @@ export function getNews(page = 1) {
 export function updateArticleImage({ _id }, image) {
   const fs = new FormData();
   fs.append('image', image);
-  console.log('updateArticleImage');
+
   return apiRequest({
     method: 'put',
     url: '/private/news/upload/image',
@@ -62,7 +62,6 @@ export function updateArticleImage({ _id }, image) {
  * @return {ArticleWithBucketFile}
  */
 export function uploadArticle(payload) {
-  console.log('UPLOAD');
   const textData = { ...payload };
 
   delete textData.image;

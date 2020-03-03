@@ -78,13 +78,16 @@
           variant="success"
           class="float-right"
           type="submit"
+          :disabled="isWaitingServerResponse"
           @click="handleSubmit"
         >
+          <b-spinner v-if="isWaitingServerResponse" small type="grow"></b-spinner>
           Сохранить
         </b-button>
         <b-button
           variant="secondary"
           class="float-right mr-2"
+          :disabled="isWaitingServerResponse"
           @click="$root.$emit('bv::hide::modal', 'modal-create-news', '#btn-show-create-news')"
         >
           Закрыть
@@ -111,6 +114,7 @@ export default {
     image: null,
     text: '',
     date: new Date(),
+    isWaitingServerResponse: false,
   }),
 
   computed: {
@@ -166,21 +170,24 @@ export default {
         return;
       }
 
-      console.log('PRE SAVE');
+      this.isWaitingServerResponse = true;
 
-      this.saveArticle()
-        .then(({ data }) => {
-          this.$emit('input', data);
-        });
-    },
-
-    saveArticle() {
-      return uploadArticle({
+      uploadArticle({
         title: this.title,
         text: this.text,
         date: this.date,
         image: this.image,
-      });
+      })
+        .then(({ data }) => {
+          this.$emit('created', data);
+        })
+        .catch((e) => {
+          alert('Произошла ошибка при создании новой новости');
+          console.log(e);
+        })
+        .finally(() => {
+          this.isWaitingServerResponse = false;
+        });
     },
 
     focusMyElement() {

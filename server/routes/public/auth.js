@@ -1,7 +1,7 @@
 import Router from 'koa-router';
 
 import User from '../../db/models/User';
-import { getPayloadForAuth, getRefreshToken, jwtSign } from '../../utils/authLogic';
+import { getRefreshToken, jwtSign } from '../../utils/authLogic';
 
 const router = new Router();
 
