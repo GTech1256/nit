@@ -1,9 +1,9 @@
-import './event';
-import init from './init';
+// import './event';
 import mongoose from 'mongoose';
+import init from './init';
 
 mongoose.set('debug', process.env.DEBUG);
-mongoose.set('useCreateIndex', true);
+// mongoose.set('useCreateIndex', true);
 mongoose.Promise = Promise;
 
 function getUrlForMongooseConnection() {
@@ -45,7 +45,12 @@ function getUrlForMongooseConnection() {
 mongoose
   .connect(
     getUrlForMongooseConnection(),
-    { useNewUrlParser: true },
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      poolSize: 999,
+
+    },
   )
   .then(
     () => {

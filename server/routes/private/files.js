@@ -10,13 +10,13 @@ export default router
     try {
       const { file } = ctx.request.files;
       file.name = `${ctx.state.user.email}_${Date.now()}|${file.name}`;
-      const res = await uploadFileToFirebase(file);
 
-      const data = {
-        url: res.Location,
-        name: res.key,
-      };
+      const data = await uploadFileToFirebase(file);
+
+
       await User.findOneAndUpdate({ email: ctx.state.user.email }, { $push: { files: data } });
+
+
       ctx.status = 200;
       ctx.body = data;
       return next();
@@ -28,6 +28,11 @@ export default router
   .post('/remove', async (ctx, next) => {
     try {
       const { name } = ctx.request.body;
+
+      if (!name) {
+        ctx.status = 400;
+        return;
+      }
 
       await removeFileFromFirebase(name);
       await User.findOneAndUpdate({ email: ctx.state.user.email }, { $pull: { files: { name } } });

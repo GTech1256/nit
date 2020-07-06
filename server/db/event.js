@@ -1,8 +1,11 @@
 import mongoose from 'mongoose';
 
+console.log('EVENTS');
+
+
 const log = {
-  info: () => console.log,
-  error: () => console.log,
+  info: console.log,
+  error: console.log,
 };
 
 /* events with connection */
@@ -28,6 +31,8 @@ process.on('exit', () => {
 
 // catches ctrl+c event
 process.on('SIGINT', () => {
+  console.log('CLOSE');
+
   mongoose.connection.close(() => log.info('Mongoose connection is disconnected due to SIGINT'));
 });
 
@@ -44,10 +49,10 @@ process.on('SIGUSR2', () => {
 process.on('unhandledRejection', (reason, p) => {
   log.error('%o Unhandled Rejection at Promise %o', reason, p);
   // info(reason, 'Unhandled Rejection at Promise', p);
-  mongoose.connection.close(() => log.info('Mongoose connection is disconnected due to unhandledRejection'),);
+  mongoose.connection.close(() => log.info('Mongoose connection is disconnected due to unhandledRejection'));
 });
 
 process.on('uncaughtException', (err) => {
   log.error("'Uncaught Exception thrown %o", err);
-  mongoose.connection.close(() => log.info('Mongoose connection is disconnected due to uncaughtException'),);
+  mongoose.connection.close(() => log.info('Mongoose connection is disconnected due to uncaughtException'));
 });

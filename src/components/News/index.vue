@@ -1,20 +1,23 @@
 <template>
-  <div>
+  <div class="news_contttt">
     <news-create-modal
       v-model="isShowNewsCreateModal"
       @created="handleNewsCreate"
     />
-    <h2 class="news">Новости</h2>
-    <b-button
-      v-if="isProfileLoaded"
-      id="btn-show-create-news"
-      class="mb-2 mt-2"
-      variant="outline-primary"
-      @click="isShowNewsCreateModal = true"
-    >
-      Добавить новую новость
-    </b-button>
-    <div class="news__container">
+    <div class="news-cont">
+      <h2 class="news--title">Новости</h2>
+      <b-button
+        v-if="isProfileLoaded"
+        id="btn-show-create-news"
+        class="mb-2 mt-2"
+        variant="primary"
+        @click="isShowNewsCreateModal = true"
+      >
+        Добавить новую новость
+      </b-button>
+    </div>
+
+    <div class="news__container" v-if="data.data.length">
       <news-article
         v-for="article in data.data"
         :key="article._id"
@@ -23,6 +26,7 @@
         :isEditable="canEditNews"
       />
     </div>
+    <p v-else class="no_news">Новостей нет.</p>
   </div>
 </template>
 <script>
@@ -61,28 +65,48 @@ export default {
   },
   methods: {
     handleNewsCreate(article) {
-      const newArray = [article, ...this.data.data];
-      newArray.length = 10;
+      console.log({ article }, 'handle');
 
-      this.data.data = newArray;
+      const newArticles = [article, ...this.data.data];
+      newArticles.length = 10;
+
+      this.data = {
+        ...this.data,
+        data: newArticles,
+      };
       this.isShowNewsCreateModal = false;
+      console.log(this.isShowNewsCreateModal);
     },
   },
 };
 </script>
 <style>
-.news {
-
+.news_contttt {
+  min-height: 98vh;
 }
 
 .news__container {
-  display: flex;
-  width: 80%;
-  margin: 0 auto;
-  flex-wrap: wrap;
+}
+
+.news--title {
+  color: white;
+  margin-right: 20px;
 }
 
 .news__article {
   margin-bottom: 50px;
+}
+
+.news-cont {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background-color: #28475d;
+}
+
+.no_news {
+  font-size: 35px;
+  font-weight: bold;
+  margin-top: 45vh;
 }
 </style>

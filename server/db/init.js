@@ -2,8 +2,10 @@ import User from './models/User';
 
 export default async () => {
   const { SUPERADMIN_EMAIL = 'superadmin@nit.ru', SUPERADMIN_PASSWORD = 'secret' } = process.env;
+  console.log('prefind');
 
   const admin = await User.findOne({ email: SUPERADMIN_EMAIL });
+  console.log(admin, 'ADMIN');
 
   if (admin) {
     console.log('admin exist');

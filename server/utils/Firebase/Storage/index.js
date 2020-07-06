@@ -9,6 +9,10 @@ firebase.initializeApp({
 
 
 export const uploadFileToFirebase = file => new Promise((resolve, reject) => {
+  console.log(1);
+  console.log(file.path);
+
+
   firebase
     .storage()
     .bucket()
@@ -18,11 +22,16 @@ export const uploadFileToFirebase = file => new Promise((resolve, reject) => {
       }
 
       await uploadedFile.makePublic();
+      console.log('published');
 
       const [url] = await uploadedFile.getSignedUrl({
         action: 'read',
-        expires: new Date(2020, 3, 3, 22, 22, 0, 0),
+        expires: new Date().getTime() + 60 * 60 * 24 * 7,
       });
+
+      console.log('RESOLVE');
+
+      // console.log(url,);
 
 
       return resolve({

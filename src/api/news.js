@@ -71,8 +71,8 @@ export function uploadArticle(payload) {
     method: 'post',
     url: '/private/news/upload/text',
     data: textData,
-  })
-    .then(({ data: createdArticle }) => updateArticleImage(createdArticle, payload.image));
+  });
+  //  .then(({ data: createdArticle }) => updateArticleImage(createdArticle, payload.image));
 }
 
 /**
@@ -93,8 +93,8 @@ export function updateArticle(payload) {
     params: {
       _id: payload._id,
     },
-  })
-    .then(({ data: createdArticle }) => updateArticleImage(createdArticle, payload.image));
+  });
+  // .then(({ data: createdArticle }) => updateArticleImage(createdArticle, payload.image));
 }
 
 /**

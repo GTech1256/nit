@@ -57,8 +57,8 @@
         />
       </b-form-group>
 
-      <b-form-group
-        label="Дата новости"
+      <!-- <b-form-group
+        label="Изображение новости"
         label-for="input-3"
         :invalid-feedback="dateState"
       >
@@ -69,7 +69,7 @@
           placeholder="Выберите фаил или перенесите его"
           drop-placeholder="Перенесите его фаил сюда..."
         />
-      </b-form-group>
+      </b-form-group> -->
     </form>
 
     <template v-slot:modal-footer>
@@ -111,7 +111,7 @@ export default {
 
   data: () => ({
     title: '',
-    image: null,
+    // image: null,
     text: '',
     date: new Date(),
     isWaitingServerResponse: false,
@@ -176,7 +176,7 @@ export default {
         title: this.title,
         text: this.text,
         date: this.date,
-        image: this.image,
+        // image: this.image,
       })
         .then(({ data }) => {
           this.$emit('created', data);

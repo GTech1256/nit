@@ -43,6 +43,8 @@ export default {
     return apiRequest.post(FILE_UPLOAD, payload).then(({ data }) => commit(FILE_UPLOAD_STORE, data));
   },
   [FILE_REMOVE_STORE]({ commit }, payload) {
+    console.log({ payload });
+
     return apiRequest.post(FILE_REMOVE, payload).then(() => commit(FILE_REMOVE_STORE, payload));
   },
 };
